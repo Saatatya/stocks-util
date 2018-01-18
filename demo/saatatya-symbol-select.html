@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>saatatya-symbol-select demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../saatatya-symbol-select.html">
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic saatatya-symbol-select demo</h3>
+      <demo-snippet>
+        <template>
+          <saatatya-symbol-select required  auto-validate></saatatya-symbol-select>
+        </template>
+      </demo-snippet>
+      
+      <h3>Exclude-symbol-list demo</h3>
+      <demo-snippet>
+        <template>
+          <saatatya-symbol-select id="selectBox" required exclude-symbol-list='["TVSMOTOR-BE", "PANAMAPET-BE"]' exchange="NSE"></saatatya-symbol-select>
+          <button onclick="_validate()">Validate</button>
+        </template>
+      </demo-snippet>
+    </div>
+  </body>
+  
+  <script>
+    function _validate(){
+      document.getElementById('selectBox').validate();
+    }
+  </script>
+</html>

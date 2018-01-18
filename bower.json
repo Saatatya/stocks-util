@@ -1,0 +1,20 @@
+{
+  "name": "stocks-util",
+  "description": "It provides a way to display ltp rate of symbol",
+  "main": "stocks-util.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0",
+    "vaadin-combo-box": "vaadin/vaadin-combo-box#^3.0.2",
+    "vaadin-material-theme": "vaadin/vaadin-material-theme#^0.3.0",
+    "lodash": "4.17.4"
+  },
+  "devDependencies": {
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  },
+  "resolutions": {
+    "polymer": "^2.0.0",
+    "lodash": "^4.17.4"
+  }
+}

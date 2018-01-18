@@ -1,0 +1,12 @@
+{
+  "analytics": false,
+  "timeout": 120000,
+  "registry": {
+    "search": [
+      "https://bower.herokuapp.com",
+      "https://bower.dreamworld.solutions"
+    ],
+    "register": "https://admin:admin123@bower-internal.dreamworld.solutions",
+    "publish": "https://admin:admin123@bower-internal.dreamworld.solutions"
+  }
+}

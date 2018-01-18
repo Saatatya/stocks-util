@@ -1,0 +1,104 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<!-- Custom elements -->
+<link rel="import" href="saatatya-instruments-service.html">
+<link rel="import" href="saatatya-ltp-service.html">
+
+<dom-module id="saatatya-ltp-value">
+  <template>
+    <style>
+      :host {
+        display: hidden;
+      }
+    </style>
+  </template>
+
+  <script>
+    /**
+     * `saatatya-ltp-value`
+     * It provides a way to display ltp rate of symbol
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class SaatatyaLtpValue extends Polymer.Element {
+      static get is() { return 'saatatya-ltp-value'; }
+      static get properties() {
+        return {
+          
+          /**
+           * Input property.
+           * Symbol to be subscribe for ltp rate
+           */
+          symbol: {
+            type: String,
+            observer: '_onSymbolChanged'
+          },
+          
+          /**
+           * Output property.
+           * ltp rate of given symbol
+           */
+          rate: {
+            type: Number,
+            value: 0.00,
+            notify: true,
+            readOnly: true
+          },
+          
+          _cache:{
+            type: Object,
+            value : function(){
+              return {};
+            }
+          },
+          debug: Boolean
+        };
+      }
+      
+      connectedCallback() {
+        super.connectedCallback();
+        
+        this._createLTPServices();
+        this._listenLTPChanges();
+        this._subscribeSymbol();
+      }
+      
+      _listenLTPChanges(){
+        window.addEventListener('ltp-updated', e => {
+          var rate = e.detail[this.symbol];
+          if(!rate) {
+            return;
+          }
+          
+          this._setRate(rate);
+        });
+      }
+      
+      
+      _onSymbolChanged(){
+        let ltp = this._subscribeSymbol();
+      }
+      
+      _subscribeSymbol(){
+        if(!window.ltpService || !this.symbol) {
+          this.debug && console.log("_subscribeSymbol:: returning as ltpService not initialized or symbol not set");
+          this._setRate(0.00);
+          return;
+        }
+        
+        let event = new CustomEvent('subscribe-symbol', {detail:this.symbol});
+        window.dispatchEvent(event);
+      }
+      
+      _createLTPServices(){
+        if(!window.ltpService || !window.ltpService.tokensToBeSubscribe){
+          window.ltpService = new ltpService();
+        }
+      }
+    }
+
+    window.customElements.define(SaatatyaLtpValue.is, SaatatyaLtpValue);
+  </script>
+</dom-module>

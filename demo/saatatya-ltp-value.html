@@ -1,0 +1,31 @@
+<link rel="import" href="../../polymer/polymer-element.html">
+
+<!-- Custom elements -->
+<link rel="import" href="../saatatya-ltp-value.html">
+
+<dom-module id="saatatya-ltp-value-demo">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    
+    <saatatya-ltp-value symbol="SILVERMIC18FEBFUT" rate="{{_rate}}"></saatatya-ltp-value>
+     <h3>SILVERMIC18FEBFUT : [[_rate]]</h3>
+     
+     <saatatya-ltp-value symbol="PDPL" rate="{{_rate1}}"></saatatya-ltp-value>
+     <h3>PDPL : [[_rate1]]</h3>
+     
+     <saatatya-ltp-value symbol="GOLDBEES" rate="{{_rate3}}"></saatatya-ltp-value>
+     <h3>"GOLDBEES" : [[_rate3]]</h3>
+  </template>
+
+  <script>
+    class SaatatyaLtpValueDemo extends Polymer.Element {
+      static get is() { return 'saatatya-ltp-value-demo'; }
+    }
+
+    window.customElements.define(SaatatyaLtpValueDemo.is, SaatatyaLtpValueDemo);
+  </script>
+</dom-module>
