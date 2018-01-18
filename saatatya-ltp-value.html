@@ -1,0 +1,36 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="saatatya-ltp-value">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+  </template>
+
+  <script>
+    /**
+     * `saatatya-ltp-value`
+     * It provides a way to display tlp rate of symbol
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class SaatatyaLtpValue extends Polymer.Element {
+      static get is() { return 'saatatya-ltp-value'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'saatatya-ltp-value'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(SaatatyaLtpValue.is, SaatatyaLtpValue);
+  </script>
+</dom-module>
