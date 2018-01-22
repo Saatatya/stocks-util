@@ -1,0 +1,267 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<!-- Vaadin elements -->
+<link rel="import" href="../vaadin-combo-box/vaadin-combo-box.html">
+<link rel="import" href="../vaadin-material-theme/vaadin-text-field.html">
+<link rel="import" href="../vaadin-text-field/vaadin-text-field.html">
+
+<!-- Custom elements -->
+<link rel="import" href="saatatya-instruments-service.html">
+
+<dom-module id="saatatya-symbol-select">
+  <template>
+    <style>
+       :host {
+        display: block;
+      }
+
+      vaadin-combo-box {
+        display: inherit;
+        width: inherit;
+      }
+    </style>
+
+    <vaadin-combo-box id="vaadinComboBox"
+     label="[[label]]"
+     items="[[_symbolList]]"
+     invalid="{{invalid}}"
+     focused$="{{focused}}"
+     required="[[required]]"
+     auto-validate$="[[autoValidate]]"
+     disabled="[[readOnly]]"
+     error-message="[[errorMessage]]"
+     item-label-path="[[itemLabelPath]]"
+     item-value-path="[[itemValuePath]]"
+     value="{{value}}"
+     on-selected-item-changed="_onSelectedItemChanged">
+      <template>
+        <div style="line-height: 48px;
+	      overflow: hidden;
+	      text-overflow: ellipsis;
+	      white-space: nowrap;
+	      font-size: 16px;
+	      font-weight: 400;
+	      color: rgb(250, 250, 250);
+	      color: rgba(0, 0, 0, 0.87);">[[item.name]]</div>
+      </template>
+    </vaadin-combo-box>
+
+  </template>
+
+  <script>
+    /**
+     * `saatatya-symbol-select`
+     * It provides a way to select Instrument/Symbol from list
+     * This element can be used within an `iron-form`.
+     * 
+     * ```html
+     * <saatatya-symbol-select
+     *     name="symbol"
+     *     label="Symbol"
+     *     required
+     *     exclude-symbol-list='[BANKBEES]'>
+     * </saatatya-symbol-select>
+     * ```
+     * When the selected `value` is changed, a `value-changed` event is triggered.
+     *
+     ** ### Styling
+     *
+     * The following custom properties are available for styling:
+     *
+     * Custom property | Description | Default
+     * ----------------|-------------|-------------
+     * `--vaadin-combo-box-overlay-max-height` | Property that determines the max height of overlay | `65vh`
+     * `--material-primary-color` | Elements's focus state color
+     * `---material-text-field-input-line-background-color` | Underline color
+     * `--material-secondary-text-color` | Label color
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+     
+     /**
+      * Fired when the value changes.
+      *
+      * @event value-changed
+      * @param {Object} detail
+      *  @param {String} detail.value the element value
+      */
+
+     /**
+      * Fired when selected item changes.
+      *
+      * @event selected-item-changed
+      * @param {Object} detail
+      *  @param {Object|String} detail.value the selected item. Type is the same as the type of `items`.
+      */
+    class saatatyaSymbolSelect extends Polymer.Element {
+      static get is() {
+        return 'saatatya-symbol-select';
+      }
+
+      static get properties() {
+        return {
+          
+          /**
+           * Input/Output property.
+           * Current selected item
+           * Set default value of this property for default selected item.
+           */
+          value: {
+            type: String,
+            notify: true
+          },
+          
+          /**
+           * Input property.
+           * Set this property to show specific exchange type's symbols
+           * e.g NSE
+           */
+          exchange: {
+            type: String
+          },
+          
+          /*
+           * Input property.
+           * Set this property to not allow specific symbol selection from this list
+           * This element shows erorr when current selected item's is present in this property value.
+           */
+          excludeSymbolList: {
+            type: Array,
+            value: function () {
+              return [];
+            }
+          },
+          
+          /**
+           * Input property.
+           * Path for label of the item. If `items` is an array of objects, the
+           * `itemLabelPath` is used to fetch the displayed string label for each
+           * item.
+           */
+          itemLabelPath: {
+            type: String,
+            value: 'tradingsymbol'
+          },
+          
+          /**
+           * Input property.
+           * Path for the value of the item. If `items` is an array of objects, the
+           * `itemValuePath:` is used to fetch the string value for the selected
+           * item.
+           */
+          itemValuePath: {
+            type: String,
+            value: 'tradingsymbol'
+          },
+          
+          /**
+           * Input property
+           * The label for this element.
+           */
+          label: {
+            type: Boolean,
+            value: 'Symbol'
+          },
+          
+          /**
+           * Input property
+           * Name to be used in form serialization
+           */
+          name: String,
+          
+          /**
+           * Input property.
+           * Set to true to validate field on typing.
+           */
+          autoValidate: {
+            type: Boolean,
+            value: false
+          },
+
+          /**
+           * Input property.
+           * Set to true to mark the input as required.
+           */
+          required: {
+            type: Boolean,
+            value: false
+          },
+
+          /*
+           * Output property.
+           * True when `required` is true and `value` is not available.
+           */
+          invalid: {
+            type: Boolean,
+            notify: true
+          },
+          
+          errorMessage: String,
+          
+          /**
+           * Output property.
+           * True if element is currenty focused.
+           */
+          focused: {
+            type: Boolean,
+            value: false,
+            notify: true
+          },
+          
+          /**
+           * Output property.
+           * Full detail of currently selected item
+           */
+          selectedItemDetail: {
+            type: Object,
+            notify: true
+          },
+        }
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        
+        this._fetchInstrumentList();
+        this._validate();
+      }
+
+      validate() {
+        return this.$.vaadinComboBox.validate();
+      }
+      
+      _validate(){
+        this.$.vaadinComboBox.checkValidity = () => {
+          if (this.required && !this.value) {
+            return false;
+          }
+
+          if (this.value && this.excludeSymbolList.indexOf(this.value) !== -1) {
+            return false;
+          }
+
+          return true;
+        }
+      }
+      
+      _fetchInstrumentList(){
+        if (!window.instrumentService) {
+          window.instrumentService = new instrumentService();
+        }
+
+        window.instrumentService.getInstrumentList(this.exchange).then(list => {
+          this.set('_symbolList', list);
+        });
+      }
+
+      _onSelectedItemChanged(e) {
+        this.set('selectedItemDetail', e.detail.value);
+      }
+
+    }
+
+    window.customElements.define(saatatyaSymbolSelect.is, saatatyaSymbolSelect);
+  </script>
+</dom-module>

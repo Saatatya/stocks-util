@@ -1,5 +1,9 @@
 <link rel="import" href="../polymer/polymer-element.html">
 
+<!-- Custom elements -->
+<link rel="import" href="saatatya-instruments-service.html">
+<link rel="import" href="saatatya-ltp-service.html">
+
 <dom-module id="saatatya-ltp-value">
   <template>
     <style>
@@ -7,13 +11,13 @@
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]!</h2>
+    <h1>[[rate]]</h1>
   </template>
 
   <script>
     /**
      * `saatatya-ltp-value`
-     * It provides a way to display tlp rate of symbol
+     * It provides a way to display ltp rate of symbol
      *
      * @customElement
      * @polymer
@@ -23,11 +27,51 @@
       static get is() { return 'saatatya-ltp-value'; }
       static get properties() {
         return {
-          prop1: {
+          
+          /**
+           * Input property.
+           * Symbol to be subscribe for ltp rate
+           */
+          symbol: {
             type: String,
-            value: 'saatatya-ltp-value'
-          }
+            observer: '_subscribeSymbol'
+          },
+          
+          /**
+           * Output property.
+           * ltp rate of given symbol
+           */
+          rate: Number
         };
+      }
+      
+      connectedCallback() {
+        super.connectedCallback();
+        if(!window.instrumentService){
+          window.instrumentService = new instrumentService();
+        }
+        window.ltpService = new ltpService();
+        
+        this._subscribeSymbol();
+        this._manageLtpUpdate();
+        
+      }
+      
+      _manageLtpUpdate(){
+        window.addEventListener('ltp-updated', e => {
+          if(e.detail.symbol === this.symbol){
+            this.set('rate', e.detail.lastTradedPrice);
+          }
+        });
+      }
+      
+      _subscribeSymbol(){
+        if(!this.symbol){
+          return;
+        }
+        
+        let event = new CustomEvent('subscribe-symbol', {detail:this.symbol});
+        window.dispatchEvent(event);
       }
     }
 
