@@ -74,17 +74,25 @@ class ltpService {
   }
   
   /**
-   * Listne for lip updates
+   * Listen for lip updates
    * On ltp updates triggers `ltp-updated` with ltp rate
    */
   _onTicks(tick){
-    let eventData = {
-        lastTradedPrice: tick[0].LastTradedPrice,
-        symbol: this.symbolHash[tick[0].Token]
-    };
+    let eventData = this._parseEventData(tick);
+    
     let event = new CustomEvent('ltp-updated', {detail: eventData});
     
     window.dispatchEvent(event);
+  }
+  
+  _parseEventData(eventData){
+    var detail = {};
+    
+    _.forEach(eventData, data => {
+      detail[this.symbolHash[data.Token]] = data.LastTradedPrice
+    });
+    
+    return detail;
   }
   
   _subscribeToken(){

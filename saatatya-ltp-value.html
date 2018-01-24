@@ -8,10 +8,9 @@
   <template>
     <style>
       :host {
-        display: block;
+        display: hidden;
       }
     </style>
-    <h1>[[rate]]</h1>
   </template>
 
   <script>
@@ -41,7 +40,10 @@
            * Output property.
            * ltp rate of given symbol
            */
-          rate: Number
+          rate: {
+            type: Number,
+            notify: true
+          },
         };
       }
       
@@ -55,8 +57,8 @@
       
       _manageLtpUpdate(){
         window.addEventListener('ltp-updated', e => {
-          if(e.detail.symbol === this.symbol){
-            this.set('rate', e.detail.lastTradedPrice || 0.00);
+          if(e.detail[this.symbol]){
+            this.set('rate', e.detail[this.symbol]);
           }
         });
       }
