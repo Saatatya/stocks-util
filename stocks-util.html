@@ -1,0 +1,19 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="stocks-util">
+  <template>
+    <style>
+      :host {
+        display: hidden;
+      }
+    </style>
+  </template>
+
+  <script>
+    class StockUtils extends Polymer.Element {
+      static get is() { return 'stocks-util'; }
+    }
+
+    window.customElements.define(StockUtils.is, StockUtils);
+  </script>
+</dom-module>

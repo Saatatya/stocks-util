@@ -47,12 +47,8 @@
       
       connectedCallback() {
         super.connectedCallback();
-        if(!window.instrumentService){
-          window.instrumentService = new instrumentService();
-        }
-        window.ltpService = new ltpService();
         
-        this._subscribeSymbol();
+        this._createLTPServices();
         this._manageLtpUpdate();
         
       }
@@ -60,18 +56,28 @@
       _manageLtpUpdate(){
         window.addEventListener('ltp-updated', e => {
           if(e.detail.symbol === this.symbol){
-            this.set('rate', e.detail.lastTradedPrice);
+            this.set('rate', e.detail.lastTradedPrice || 0.00);
           }
         });
       }
       
       _subscribeSymbol(){
         if(!this.symbol){
+          this.rate = 0.00;
           return;
         }
         
+        // As Polymer's attribure-changed event triggers before connectCallback 
+        this._createLTPServices();
+        
         let event = new CustomEvent('subscribe-symbol', {detail:this.symbol});
         window.dispatchEvent(event);
+      }
+      
+      _createLTPServices(){
+        if(!window.ltpService){
+          window.ltpService = new ltpService();
+        }
       }
     }
 

@@ -25,6 +25,10 @@ class ltpService {
    * Establishes web socket connection
    */
   _basicSetup(){
+    if(!window.instrumentService){
+      window.instrumentService = new instrumentService();
+    }
+    
     this.ticker = new KiteTicker(this.apiKey, this.userId, this.publicToken);
     
     this.ticker.connect();
@@ -42,10 +46,20 @@ class ltpService {
         console.warn("Instrument service is not yet ready");
         return;
       }
-      window.instrumentService.getInstrumentToken(e.detail).then(token => {
-        this._updateSubscribedToken(token);
-        this.symbolHash[token] = e.detail;
-      });
+      
+      let token = window.instrumentService.getInstrumentToken(e.detail);
+      if(!token){
+        setTimeout(() => {
+          let token = window.instrumentService.getInstrumentToken(e.detail);
+          this._updateSubscribedToken(token);
+          this.symbolHash[token] = e.detail;
+        }, 800);
+        
+        return;
+      }
+      
+      this._updateSubscribedToken(token);
+      this.symbolHash[token] = e.detail;
     });
   }
   
@@ -64,11 +78,12 @@ class ltpService {
    * On ltp updates triggers `ltp-updated` with ltp rate
    */
   _onTicks(tick){
-    var eventData = {
+    let eventData = {
         lastTradedPrice: tick[0].LastTradedPrice,
         symbol: this.symbolHash[tick[0].Token]
     };
-    var event = new CustomEvent('ltp-updated', {detail: eventData});
+    let event = new CustomEvent('ltp-updated', {detail: eventData});
+    
     window.dispatchEvent(event);
   }
   

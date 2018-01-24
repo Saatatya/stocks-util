@@ -1,12 +1,12 @@
 {
-  "name": "saatatya-ltp-value",
+  "name": "stocks-util",
   "description": "It provides a way to display ltp rate of symbol",
-  "main": "saatatya-ltp-value.html",
+  "main": "stocks-util.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "pouchdb": "^6.4.1",
     "vaadin-combo-box": "^3.0.2",
-    "vaadin-material-theme": "vaadin/vaadin-material-theme#^0.3.0"
+    "vaadin-material-theme": "vaadin/vaadin-material-theme#^0.3.0",
+    "lodash": "4.17.4"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",

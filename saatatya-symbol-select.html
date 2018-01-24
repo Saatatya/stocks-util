@@ -21,9 +21,8 @@
       }
     </style>
 
-    <vaadin-combo-box id="vaadinComboBox"
+    <vaadin-combo-box id="vaadinComboBox" on-filter-changed="_filterChanged" filtered-items="[[items]]"
      label="[[label]]"
-     items="[[_symbolList]]"
      invalid="{{invalid}}"
      focused$="{{focused}}"
      required="[[required]]"
@@ -41,8 +40,7 @@
 	      white-space: nowrap;
 	      font-size: 16px;
 	      font-weight: 400;
-	      color: rgb(250, 250, 250);
-	      color: rgba(0, 0, 0, 0.87);">[[item.name]]</div>
+	      color: rgba(0, 0, 0, 0.87);">[[item.tradingsymbol]]</div>
       </template>
     </vaadin-combo-box>
 
@@ -251,13 +249,31 @@
           window.instrumentService = new instrumentService();
         }
 
-        window.instrumentService.getInstrumentList(this.exchange).then(list => {
-          this.set('_symbolList', list);
-        });
+        this._instrumentList = window.instrumentService.getInstrumentList(this.exchange)
       }
 
       _onSelectedItemChanged(e) {
         this.set('selectedItemDetail', e.detail.value);
+      }
+      
+      _filterChanged(e){
+        if(e.detail && !e.detail.value){
+          return;
+        }
+        
+        if(this._instrumentList && !this._instrumentList.length){
+          this._fetchInstrumentList();
+        }
+        
+        let items = [];
+        
+        this._filterDebouncer = Polymer.Debouncer.debounce(this._debouncer, Polymer.Async.timeOut.after(20), () => {
+          items = _.filter(this._instrumentList, function(item){
+            return item.tradingsymbol.startsWith(e.detail.value.toUpperCase());
+          });
+          
+          this.items = items.splice(0, 20);
+        });
       }
 
     }
