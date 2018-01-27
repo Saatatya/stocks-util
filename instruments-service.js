@@ -1,7 +1,7 @@
 class instrumentService {
   
   constructor(obj={}) {
-    this.url = obj.url || "http://192.168.0.53:8080/instruments";
+    this.url = obj.url || "http://192.168.0.53:8081/instruments";
     this.dbName = obj.dbName || "instrument-db";
     
     /**
@@ -38,7 +38,6 @@ class instrumentService {
     };
     
     xhttp.open("GET", this.url, true);
-    xhttp.setRequestHeader("Authorization", "Basic YWJjOnNwbTEyMzQ=");
     xhttp.send();
   }
   

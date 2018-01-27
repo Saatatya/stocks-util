@@ -8,6 +8,7 @@ class ltpService {
     // Subscribed list token
     this.tokensToBeSubscribe = [];
     this.symbolHash = {};
+    this._ltpHash = {};
     
     this.init();
   }
@@ -47,6 +48,16 @@ class ltpService {
         return;
       }
       
+      if(this._ltpHash[e.detail]){
+        var obj = [];
+        obj[e.detail] = this._ltpHash[e.detail];
+        
+        let event = new CustomEvent('ltp-updated', {detail: obj});
+        
+        window.dispatchEvent(event);
+        return;
+      }
+      
       let token = window.instrumentService.getInstrumentToken(e.detail);
       if(!token){
         setTimeout(() => {
@@ -80,6 +91,7 @@ class ltpService {
   _onTicks(tick){
     let eventData = this._parseEventData(tick);
     
+    this._ltpHash = _.merge(this._ltpHash, eventData)
     let event = new CustomEvent('ltp-updated', {detail: eventData});
     
     window.dispatchEvent(event);

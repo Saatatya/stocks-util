@@ -42,8 +42,16 @@
            */
           rate: {
             type: Number,
+            value: 0.00,
             notify: true
           },
+          
+          _cache:{
+            type: Object,
+            value : function(){
+              return {};
+            }
+          }
         };
       }
       
@@ -58,6 +66,7 @@
       _manageLtpUpdate(){
         window.addEventListener('ltp-updated', e => {
           if(e.detail[this.symbol]){
+            this._cache[this.symbol] = e.detail[this.symbol];
             this.set('rate', e.detail[this.symbol]);
           }
         });
@@ -71,6 +80,8 @@
         
         // As Polymer's attribure-changed event triggers before connectCallback 
         this._createLTPServices();
+        
+        this.set('rate', this._cache[this.symbol]);
         
         let event = new CustomEvent('subscribe-symbol', {detail:this.symbol});
         window.dispatchEvent(event);

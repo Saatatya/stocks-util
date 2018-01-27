@@ -232,14 +232,14 @@
       
       _validate(){
         this.$.vaadinComboBox.checkValidity = () => {
-          if (this.required && !this.value) {
-            return false;
-          }
+          
 
           if (this.value && this.excludeSymbolList.indexOf(this.value) !== -1) {
             return false;
           }
-
+          if (this.required && !this.value) {
+            return false;
+          }
           return true;
         }
       }
