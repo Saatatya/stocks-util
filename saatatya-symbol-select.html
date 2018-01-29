@@ -4,6 +4,7 @@
 <link rel="import" href="../vaadin-combo-box/vaadin-combo-box.html">
 <link rel="import" href="../vaadin-material-theme/vaadin-text-field.html">
 <link rel="import" href="../vaadin-text-field/vaadin-text-field.html">
+<link rel="import" href="symbol-select-item.html">
 
 <!-- Custom elements -->
 <link rel="import" href="saatatya-instruments-service.html">
@@ -34,13 +35,7 @@
      value="{{value}}"
      on-selected-item-changed="_onSelectedItemChanged">
       <template>
-        <div style="line-height: 48px;
-	      overflow: hidden;
-	      text-overflow: ellipsis;
-	      white-space: nowrap;
-	      font-size: 16px;
-	      font-weight: 400;
-	      color: rgba(0, 0, 0, 0.87);">[[item.tradingsymbol]]</div>
+        <symbol-select-item item="[[item]]"></symbol-select-item>
       </template>
     </vaadin-combo-box>
 
@@ -265,6 +260,10 @@
           this._fetchInstrumentList();
         }
         
+        this._setFilteredItems(e);
+      }
+      
+      _setFilteredItems(e){
         let items = [];
         
         this._filterDebouncer = Polymer.Debouncer.debounce(this._debouncer, Polymer.Async.timeOut.after(20), () => {
@@ -272,7 +271,19 @@
             return item.tradingsymbol.startsWith(e.detail.value.toUpperCase());
           });
           
-          this.items = items.splice(0, 20);
+          let grpByExchange = _.groupBy(items, 'exchange');
+          let exchanges = _.keys(grpByExchange);
+          let orderedList = [];
+          
+          _.each(exchanges, key => {
+            let list = grpByExchange[key];
+            let sortedList = _.sortBy(list, 'tradingsymbol');
+            
+            orderedList.push(sortedList);
+          });
+          
+          orderedList = _.flatten(orderedList);
+          this.items = orderedList.splice(0, 20);
         });
       }
 

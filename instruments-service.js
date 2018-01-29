@@ -33,7 +33,17 @@ class instrumentService {
     
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        self.fullInstrumentList = JSON.parse(this.responseText);
+        let instrumentList = JSON.parse(this.responseText);
+        let today = new Date().getTime();
+        
+        self.fullInstrumentList = _.filter(instrumentList, function(item){
+          if(!item.expiry){
+            return true;
+          }
+          
+          let expiryDate = new Date(item.expiry).getTime();
+          return today < expiryDate;
+        });
       }
     };
     

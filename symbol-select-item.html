@@ -1,0 +1,107 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="symbol-select-item">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      :host(:hover){
+        background: #EDEDED;
+      }
+      .item-wrapper{
+        line-height: 48px;
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    font-size: 16px;
+	    font-weight: 400;
+	    display: flex;
+	    flex-direction: row;
+	    color: rgba(0, 0, 0, 0.87);
+	  }
+	  .symbol{
+	    flex:1;
+	  }
+	  .symbol-name{
+	    font-size: 13px;
+	  }
+	  .chip{
+        padding: 4px;
+        margin-left: 4px;
+        
+        @apply --saatatya-symbol-select-item-chip;
+	  }
+    </style>
+    
+    <div class="item-wrapper">
+      <div class="symbol">[[item.tradingsymbol]]</div>
+      <div class="symbol-name">
+        <span>[[item.name]]</span>
+        <span class="chip" style="color: [[_getColor(item.exchange)]];
+        background-color: [[_getBgColor(item.exchange)]]">[[item.exchange]]</span>
+      </div>
+     </div>
+	      
+  </template>
+
+  <script>
+    class SymbolSelectItem extends Polymer.Element {
+      static get is() { return 'symbol-select-item'; }
+      static get properties() {
+        return {
+          
+          /**
+           * Input property.
+           * Intrument details
+           */
+          item: {
+            type: Object,
+          },
+          
+          exchangeColorHash:{
+            type: Object,
+            value: function(){
+              return {
+                'BSE' : 'rgb(51, 133, 255)',
+                'NSE' : 'rgb(255, 83, 26)',
+                'NFO' : 'rgb(255, 136, 77)',
+                'CDS' : 'rgb(255, 209, 26)',
+                'MCX' : 'rgb(102, 255, 102)',
+                'BFO' : 'rgb(51, 102, 0)'
+              }
+            }
+          },
+          
+          defaultColor:{
+            type: String,
+            value: 'rgb(169,169,169)'
+          }
+          
+        };
+      }
+      
+      _getColor(exchange){
+        if(this.exchangeColorHash[exchange]){
+          return this.exchangeColorHash[exchange];
+        }
+        
+        return this.defaultColor;
+      }
+      
+      _getBgColor(exchange){
+        if(!exchange){
+          return;
+        }
+        
+        let color = this.exchangeColorHash[exchange] || this.defaultColor;
+         let rgbaColor = color.replace('rgb', 'rgba');
+         let opacity = rgbaColor.substr(0, rgbaColor.length-1);
+         return opacity + ', 0.2)';
+      }
+      
+    }
+
+    window.customElements.define(SymbolSelectItem.is, SymbolSelectItem);
+  </script>
+</dom-module>

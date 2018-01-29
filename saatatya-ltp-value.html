@@ -33,7 +33,7 @@
            */
           symbol: {
             type: String,
-            observer: '_subscribeSymbol'
+            observer: '_onSymbolChanged'
           },
           
           /**
@@ -43,7 +43,8 @@
           rate: {
             type: Number,
             value: 0.00,
-            notify: true
+            notify: true,
+            readOnly: true
           },
           
           _cache:{
@@ -51,7 +52,8 @@
             value : function(){
               return {};
             }
-          }
+          },
+          debug: Boolean
         };
       }
       
@@ -59,29 +61,32 @@
         super.connectedCallback();
         
         this._createLTPServices();
-        this._manageLtpUpdate();
-        
+        this._listenLTPChanges();
+        this._subscribeSymbol();
       }
       
-      _manageLtpUpdate(){
+      _listenLTPChanges(){
         window.addEventListener('ltp-updated', e => {
-          if(e.detail[this.symbol]){
-            this._cache[this.symbol] = e.detail[this.symbol];
-            this.set('rate', e.detail[this.symbol]);
+          var rate = e.detail[this.symbol];
+          if(!rate) {
+            return;
           }
+          
+          this._setRate(rate);
         });
       }
       
+      
+      _onSymbolChanged(){
+        let ltp = this._subscribeSymbol();
+      }
+      
       _subscribeSymbol(){
-        if(!this.symbol){
-          this.rate = 0.00;
+        if(!window.ltpService || !this.symbol) {
+          this.debug && console.log("_subscribeSymbol:: returning as ltpService not initialized or symbol not set");
+          this._setRate(0.00);
           return;
         }
-        
-        // As Polymer's attribure-changed event triggers before connectCallback 
-        this._createLTPServices();
-        
-        this.set('rate', this._cache[this.symbol]);
         
         let event = new CustomEvent('subscribe-symbol', {detail:this.symbol});
         window.dispatchEvent(event);
