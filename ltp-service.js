@@ -42,6 +42,7 @@ let ltpService = class ltpService {
    * Retries token from symbol and subscribes for live rate
    */
   _handleSubscribeSymbolEvent(){
+    console.log('_handleSubscribeSymbolEvent called');
     window.addEventListener('subscribe-symbol', e => {
       console.log('subscribe-symbol handler called', window.instrumentService);
       if(!window.instrumentService){

@@ -83,14 +83,12 @@
       }
       
       _subscribeSymbol(){
-        console.log('_subscribeSymbol called', window.ltpService);
         if(!window.ltpService || !this.symbol) {
           this.debug && console.log("_subscribeSymbol:: returning as ltpService not initialized or symbol not set");
           this._setRate(0.00);
           return;
         }
         
-        console.log("subscribe-symbol fired");
         let event = new CustomEvent('subscribe-symbol', {detail:this.symbol});
         window.dispatchEvent(event);
       }
