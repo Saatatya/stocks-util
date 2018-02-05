@@ -18,6 +18,7 @@ let ltpService = class ltpService {
    * Handles `subscribe-symbol` event
    */
   init(){
+    console.log("ltp init invoked");
     this._basicSetup();
     this._handleSubscribeSymbolEvent();
   }
