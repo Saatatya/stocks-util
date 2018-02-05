@@ -95,9 +95,7 @@
       }
       
       _createLTPServices(){
-        console.log('window.ltpService', window.ltpService);
-        if(!window.ltpService){
-          console.log("from ltp value", window.ltpService)
+        if(!window.ltpService || !window.ltpService.tokensToBeSubscribe.length){
           window.ltpService = new ltpService();
           window.ruchi = window.ltpService;
         }
