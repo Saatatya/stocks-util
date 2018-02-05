@@ -93,7 +93,7 @@
       }
       
       _createLTPServices(){
-        if(!window.ltpService){
+        if(!window.ltpService || !window.ltpService.tokensToBeSubscribe){
           window.ltpService = new ltpService();
         }
       }

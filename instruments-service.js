@@ -1,4 +1,4 @@
-class instrumentService {
+let instrumentService = class instrumentService {
   
   constructor(obj={}) {
     this.url = obj.url || "http://192.168.0.53:8081/instruments";
