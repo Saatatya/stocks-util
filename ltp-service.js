@@ -43,6 +43,7 @@ let ltpService = class ltpService {
    */
   _handleSubscribeSymbolEvent(){
     window.addEventListener('subscribe-symbol', e => {
+      console.log('subscribe-symbol handler called', window.instrumentService);
       if(!window.instrumentService){
         console.warn("Instrument service is not yet ready");
         return;
