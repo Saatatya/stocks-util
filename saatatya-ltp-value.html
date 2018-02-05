@@ -83,6 +83,7 @@
       }
       
       _subscribeSymbol(){
+        this._createLTPServices();
         if(!window.ltpService || !this.symbol) {
           this.debug && console.log("_subscribeSymbol:: returning as ltpService not initialized or symbol not set");
           this._setRate(0.00);
@@ -94,6 +95,7 @@
       }
       
       _createLTPServices(){
+        console.log('window.ltpService', window.ltpService);
         if(!window.ltpService){
           console.log("from ltp value", window.ltpService)
           window.ltpService = new ltpService();
