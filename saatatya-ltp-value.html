@@ -67,6 +67,7 @@
       
       _listenLTPChanges(){
         window.addEventListener('ltp-updated', e => {
+          console.log('LTp updated event', e.detail);
           var rate = e.detail[this.symbol];
           if(!rate) {
             return;

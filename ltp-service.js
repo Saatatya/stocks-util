@@ -48,6 +48,8 @@ class ltpService {
         return;
       }
       
+      console.log('this._ltpHash', this._ltpHash);
+      
       if(this._ltpHash[e.detail]){
         var obj = [];
         obj[e.detail] = this._ltpHash[e.detail];
