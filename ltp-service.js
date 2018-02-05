@@ -1,4 +1,4 @@
-class ltpService {
+let ltpService = class ltpService {
   
   constructor(obj={}) {
     this.apiKey = obj.apiKey || "kitefront";
