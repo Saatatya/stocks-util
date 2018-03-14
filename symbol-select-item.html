@@ -39,7 +39,7 @@
       <div class="symbol-name">
         <span>[[item.name]]</span>
         <span class="chip" style="color: [[_getColor(item.exchange)]];
-        background-color: [[_getBgColor(item.exchange)]]">[[item.exchange]]</span>
+        border: [[_getBgColor(item.exchange)]]">[[item.exchange]]</span>
       </div>
      </div>
 	      
@@ -63,12 +63,12 @@
             type: Object,
             value: function(){
               return {
-                'BSE' : 'rgb(51, 133, 255)',
-                'NSE' : 'rgb(255, 83, 26)',
-                'NFO' : 'rgb(255, 136, 77)',
-                'CDS' : 'rgb(255, 209, 26)',
-                'MCX' : 'rgb(102, 255, 102)',
-                'BFO' : 'rgb(51, 102, 0)'
+                'BSE' : '#0089D0',
+                'NSE' : '#B73737',
+                'NFO' : '#9b9b9b',
+                'CDS' : '#9b9b9b',
+                'MCX' : '#013779',
+                'BFO' : '#9b9b9b'
               }
             }
           },
@@ -95,11 +95,17 @@
         }
         
         let color = this.exchangeColorHash[exchange] || this.defaultColor;
-         let rgbaColor = color.replace('rgb', 'rgba');
-         let opacity = rgbaColor.substr(0, rgbaColor.length-1);
-         return opacity + ', 0.2)';
+        
+        if(exchange === 'NFO' || exchange === 'CDS' || exchange === 'BFO'){
+          return color;
+        }
+        
+        if(exchange === 'MCX' || exchange === 'NSE' || exchange === 'BSE'){
+          return '1px solid ' + color;
+        }
+        
+        return this.defaultColor;
       }
-      
     }
 
     window.customElements.define(SymbolSelectItem.is, SymbolSelectItem);
