@@ -6,7 +6,9 @@
     "polymer": "Polymer/polymer#^2.0.0",
     "vaadin-combo-box": "vaadin/vaadin-combo-box#^3.0.2",
     "vaadin-material-theme": "vaadin/vaadin-material-theme#^0.3.0",
-    "lodash": "4.17.4"
+    "lodash": "4.17.4",
+    "js-lib-imports": "feature-hybrid-element"
+    
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^2.0.0",
@@ -15,6 +17,7 @@
   },
   "resolutions": {
     "polymer": "^2.0.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "js-lib-imports": "feature-hybrid-element"
   }
 }
